@@ -28,18 +28,20 @@ Start-Transcript -Path $logfile -NoClobber
 foreach ($computer in $computerNames.Name) {
     $computer.name # Show computername
     if ((Test-Connection -computername $computer -Quiet) -eq $true) {
-        $drives =(Invoke-Command -ComputerName $computer -ScriptBlock {Get-PSDrive -PSProvider FileSystem })
-        $computer
-        $drives.name
-        foreach ($drive in $drives) {
-            if ($drive.Name -notin $using:ignoreDrives) {
-                Invoke-Command -ComputerName $computer -ScriptBlock {
-                    Start-Transcript -Path "$logpath\log4jscan_$computer-$drive.log"
-                    powershell $scantool $drive.root
-                    Stop-Transcript
-                }
+        Copy-Item -Path $scantool -Destination "\\$computer\C$\Temp\log4j-finder.exe"
+        Invoke-Command -ComputerName $computer -ScriptBlock {
+            $drives =(Get-PSDrive -PSProvider FileSystem)
+            Start-Transcript -Path "$logpath\log4jscan_$computer.log"
+            $computer
+            $drives.name
+            foreach ($drive in $drives) {
+#                if ($drive.Name -notin $using:ignoreDrives) {
+                    C:\Temp\log4j-finder.exe $drive.root
+#                }
             }
+            Stop-Transcript
         }
+        Remove-Item -Path "\\$computer\C$\Temp\log4j-finder.exe"
     }
     else{
      Write-host $computer is Offline
