@@ -56,7 +56,7 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 # Java Archive Extensions
-JAR_EXTENSIONS = (".jar", ".war", ".ear", ".zip")
+JAR_EXTENSIONS = (".jar", ".war", ".ear", ".zip",".nar")
 
 # Filenames to find and MD5 hash (also recursively in JAR_EXTENSIONS)
 # Currently we just look for JndiManager.class
